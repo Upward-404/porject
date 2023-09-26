@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #box {
+            height: 190px;
+            width: 350px;
+            border: 1px solid black;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+        }
+
+        .text_box {
+            width: 150px;
+            height: 30px;
+            border: 1px solid black;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.9s;
+            /* overflow: hidden; */
+        }
+
+        del {
+            text-decoration: none;
+            /* text-decoration: line-through; */
+        }
+    </style>
+</head>
+
+<body>
+    <input type="text" placeholder="输入任务..." id="put">
+    <button id="but" onclick="SetData(
+    document.getElementById('put'),
+    document.getElementById('box'))">添加</button>
+    <div id="box"></div>
+
+    <script>
+        var father_box = document.getElementById('box');
+        function SetData(ele_put, ele_box) {
+            var string =
+                '<div class=\'text_box\'>' +
+                '<input type=\'checkbox\' class=\'put_del\' name=\'false\'>' +
+                '<del>' + ele_put.value + '</del>' +
+                '<button class=\'del_box\'>删除</button>' +
+                '</div>';
+            ele_box.innerHTML += string;
+            //主体盒子用于删除
+            var text_box = document.querySelectorAll('.text_box');
+            //删除按钮
+            var del_box = document.querySelectorAll('.del_box');
+            //复选框
+            var put_del = document.querySelectorAll('.put_del');
+            //del标签 删除线定义
+            var del = document.getElementsByTagName('del');
+            if (text_box.length >= 13 && del_box.length >= 13) {
+                alert('已经最大了！')
+                //当长度为 12时防止越界删除最后一项
+                text_box[text_box.length - 1].style.opacity = 0;
+                text_box[text_box.length - 1].style.display = 'none';
+                var parentNode = text_box[text_box.length - 1].parentNode;
+                parentNode.removeChild(text_box[text_box.length - 1]);
+            }
+            for (var i = 0; i < text_box.length; i++) {
+                  (function (i) {
+                    del_box[i].onclick = function () {
+                        text_box[i].style.opacity = 0;
+                        text_box[i].style.marginBottom = '-32px';
+                        //以父节点的方式删除
+                        setTimeout(() => {
+                        text_box[i].style.display = 'none'
+                        var parentNode = text_box[i].parentNode;
+                        parentNode.removeChild(text_box[i]);
+                        //重新定义 text_box
+                        text_box = document.querySelectorAll('.text_box');
+                        del_box = document.querySelectorAll('.del_box');
+                        console.log(text_box.length)   
+                        }, 1000);
+                    }
+                }(i)) 
+            }
+            for (var i = 0; i < put_del.length; i++) {
+                (function (i) {
+                    put_del[i].onclick = function () {
+                        if (put_del[i].name == 'false') {
+                            del[i].style.textDecoration = 'line-through';
+                            put_del[i].name = 'true';
+                        } else {
+                            del[i].style.textDecoration = 'none';
+                            put_del[i].name = 'false';
+                        }
+                    }
+                }(i))
+            }
+        }
+    </script>
+</body>
+
+</html>
